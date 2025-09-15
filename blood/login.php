@@ -1,0 +1,226 @@
+<?php
+session_start(); // Start the session
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "bloodbank";
+    $conn = mysqli_connect($servername, $username, $password, $dbname);
+
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+    }
+
+
+    // Get the input username and password from the form
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    // SQL query to check if the username and password match a record in the users table
+    $sql = "SELECT id FROM register WHERE username='$username' AND password='$password'";
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        // User exists, set session variables
+        $_SESSION['username'] = $username;
+        // Alert message
+        echo '<script>alert("Login successful!");</script>';
+        // Redirect to the homepage or any other page after successful login
+        header("Location: home.php");
+        exit();
+    } else {
+        // Invalid username or password, redirect back to login page with error message
+        header("Location: login.php?error=invalid");
+        exit();
+    }
+
+    // Close the connection
+    $conn->close();
+} else {
+    // Redirect back to login page if the form is not submitted
+    header("Location: login.html");
+    exit();
+}
+?>
+
+ 
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+    </style>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        .container {
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-family: "Poppins", sans-serif;
+
+            background-image: url(login-bg.png);
+
+            background-position: bottom;
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+        }
+
+        .container .login-box {
+            border-radius: 15px;
+            backdrop-filter: blur(20px);
+
+            width: 30%;
+            height: 80%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            justify-content: space-between;
+
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+        }
+
+        .container .login-box h1 {
+            margin-top: 2rem;
+            color: red;
+
+            text-transform: uppercase;
+            letter-spacing: 3px;
+
+            -webkit-text-stroke: .3px #000;
+        }
+
+        .container .login-box form {
+            height: 70%;
+            width: 90%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            align-items: center;
+        }
+
+        .login-box form input {
+            width: 90%;
+            height: 15%;
+
+            padding-left: 1rem;
+            outline: none;
+
+            font-size: 1rem;
+            color: black;
+
+            border-radius: 10px;
+            border: none;
+
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+        }
+
+        .login-box form input:focus {
+            border: .5px red solid;
+        }
+
+        .login-box form button {
+            color: white;
+            background-color: red;
+
+            width: 60%;
+            height: 12%;
+
+            cursor: pointer;
+
+            border: none;
+            border-radius: 20px;
+            font-weight: 600;
+            letter-spacing: 3px;
+
+            transition: .2s ease-in-out;
+        }
+
+        .login-box form button:hover {
+            background-color: rgb(254, 59, 59);
+            transform: translateY(3px);
+        }
+
+        .login-box .sign-up {
+            margin-bottom: 1.5rem;
+            border: none;
+            letter-spacing: 3px;
+
+            background-color: transparent;
+            color: white;
+
+            font-size: 1rem;
+            font-weight: 600;
+
+            -webkit-text-stroke: .1px #000;
+
+            cursor: pointer;
+            
+        }
+        footer {
+        padding: 10px;
+        text-align: center;
+    }
+
+    .footer-link {
+        text-decoration: none;
+        color: #333;
+        font-size: 16px;
+        margin: 0 10px;
+        transition: color 0.3s ease-in-out;
+    }
+
+    .footer-link:hover {
+        color: #faf6f6;
+    }
+
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="login-box">
+            <h1>User Login</h1>
+            <form action="login.php" method="POST">
+                <input type="text" name="username" placeholder="Please Enter Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+
+                <button type="submit">LOGIN</button>
+                <footer>
+                    <a href="reg.html" class="footer-link">New Registration?</a>
+                    <a href="home.php" class="footer-link">Back to Home</a>
+                    <a href="admin.php" class="footer-link">Admin</a>
+                </footer>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
+

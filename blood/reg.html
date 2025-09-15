@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blood Bank Registration</title>
+<style>
+    body {
+        height: 50%;
+        width: 100%;
+        font-family: Arial, sans-serif;
+        background-image: url(bb-bg.png);
+        background-position:top;
+
+    }
+    
+    .container {
+            width: 80%;
+            height: 30%;
+            align-items:center;
+            justify-content:center;
+            font-family: "Poppins", sans-serif;
+    
+            max-width: 550px;
+            background-size:100% 100%;
+            background-repeat: no-repeat;
+            margin: 0 auto;
+            padding: 50px;
+            padding-bottom: 50px;
+            padding-top: 50px;
+            border: 2px ;
+            background-color:#fdd7d7;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 2rem;
+            color: black;
+            letter-spacing:2px;
+            -webkit-text-stroke: .3px #000;
+
+            
+       }
+      
+    input[type="text"], input[type="password"], input[type="email"],input[type="number"],select {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        display: inline-block;
+        border: 2px solid #b90808;
+        border-radius: 0rem;
+        box-sizing: border-box;
+    }
+    header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .header img {
+            width: 150px;
+            margin-bottom: 3px;
+            align-items: center;
+            justify-content: center;
+        }
+    button {
+        background-color: #b90808;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 1px;
+        font-size:25px;
+        font-weight: bolder;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 30px;
+    }
+    button:hover {
+        background-color: #38c509;
+    }
+
+    label{
+        font-family: ui-monospace;
+        font-weight: bold;
+    }
+    a{
+        text-decoration: none;
+        color: white;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+        
+  <h1 align="center">BLOOD BANK REGISTRATION</h1>
+  
+  <form id="reg" method="POST" action="register.php">
+    <label for="fullName">Full Name</label>
+    <input type="text" id="fullName" name="fullName" placeholder="Enter full name" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Enter email" required>
+
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" placeholder="Enter username" required>
+
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" placeholder="Enter password" required>
+    <br>
+
+    <label for="gender">Gender:</label>
+    <input type="radio" name="gender" value="Male" required>
+    <label for="Male">Male</label>
+    <input type="radio" name="gender" value="Female" required>
+    <label for="Female">Female</label>
+    <br><br>
+
+    <label for="bloodGroup">Blood Group</label>
+    <select id="bloodGroup" name="bloodGroup" required>
+      <option value="">Select blood group</option>
+      <option value="A+">A+</option>
+      <option value="A-">A-</option>
+      <option value="B+">B+</option>
+      <option value="B-">B-</option>
+      <option value="AB+">AB+</option>
+      <option value="AB-">AB-</option>
+      <option value="O+">O+</option>
+      <option value="O-">O-</option>
+    </select>
+
+    <label for="contact">Contact Number:</label>
+    <input type="text" id="contact" name="contact" placeholder="Enter contact number" required>
+
+    <label for="quantity">Quantity(units):</label>
+    <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" required><br>
+    <input type="radio" name="role" value="donor" required>
+    <label for="donor">Donor</label>
+    <input type="radio" name="role" value="Recipient" required>
+    <label for="recipient">Recipient</label>
+
+    <button type="submit">Register</button>
+    <a href="home.php">Back to Home</a>
+  </form>
+</div>
+
+<script>
+    document.getElementById("registrationForm").addEventListener("submit", function(event){
+        event.preventDefault(); // Prevent form submission
+        var fullName = document.getElementById("fullName").value;
+        var email = document.getElementById("email").value;
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        var bloodGroup = document.getElementById("bloodGroup").value;
+
+        // Here you can add your logic to handle registration data
+        // For simplicity, let's just display an alert
+        alert("Full Name: " + fullName + "\nEmail: " + email + "\nUsername: " + username + "\nPassword: " + password + "\nBlood Group: " + bloodGroup);
+    });
+    </script>
+
+
+
+</body>
+</html>

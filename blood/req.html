@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Request Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #cd0909;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            margin: 20px auto;
+            width: 80%;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 10px;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #b90808;
+            color: white;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 30px; 
+            font-size: 18px; 
+            font-weight: bolder;
+            cursor: pointer;
+            width: 207px; 
+}
+.center {
+                        text-align: center;
+                    }
+
+
+
+        button:hover {
+            background-color: #07b407;
+        }
+        label {
+        font-family: ui-monospace;
+        font-weight: bold;
+    }
+   
+        footer a {
+            text-decoration: none;
+            color: #cd0909;
+            font-weight: bold;
+        }
+
+        footer a:hover {
+            color: #07b407;
+        }
+    </style>
+</head>
+</head>
+<body>
+    <header>
+        <h1>Blood Bank Service System</h1>
+    </header>
+    <div class="container">
+        <h2>Blood Request Form</h2>
+        <form id="bloodRequestForm" action="request.php" method="POST" >
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="blood_group">Blood Group:</label>
+            <select id="blood_group" name="blood_group" required>
+                <option value="">Select Blood Group</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+            <label for="unit">Unit:</label>
+            <input type="text" id="unit" name="unit" required>
+            
+            <label for="contact">Contact Number:</label>
+            <input type="text" id="contact" name="contact" required>
+            
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required>
+
+            <label for="gender">Gender:</label>
+            <div class="radio-group">
+            <input type="radio" name="gender" value="Male" required>
+            <label for="Male">Male</label>
+            <input type="radio" name="gender" value="Female" required>
+            <label for="Female">Female</label></div>
+            <br><br>
+            
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <style>
+                    
+                </style>
+            </head>
+            <body>
+            
+            <div class="center">
+                <button type="submit">Submit Request</button>
+            </div>
+            
+         
+            
+        </form>
+        <footer>
+            <a href="home.html">Previous Page</a>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('bloodRequestForm').addEventListener('submit', function(event) {
+            // Check if all required fields are filled
+            var name = document.getElementById('name').value.trim();
+            var bloodGroup = document.getElementById('blood_group').value.trim();
+            var contact = document.getElementById('contact').value.trim();
+            var city = document.getElementById('city').value.trim();
+            
+            if (!name || !bloodGroup || !contact || !city) {
+                alert('Please fill in all required fields.');
+                event.preventDefault(); // Prevent form submission
+            
+            }
+        });
+    </script>
+<script>
+    function request() {
+        alert('Request successful!');
+        window.location.href = 'request.php'; 
+    }
+    </script>
+
+</body>

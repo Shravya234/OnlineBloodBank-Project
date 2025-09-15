@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - Blood Bank Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        margin: 0;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    .sidebar {
+        width: 250px;
+        background-color: #b71c1c;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 20px;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    .sidebar button {
+        width: 100%;
+        padding: 20px;
+        margin: 5px 0;
+        border: none;
+        background-color: #c62828;
+        color: white;
+        cursor: pointer;
+        font-size: 18px;
+        font-weight: bold;
+        text-align: left;
+        padding-left: 30px;
+    }
+    .sidebar button:hover {
+        background-color: #e53935;
+    }
+    .content {
+        flex-grow: 1;
+        padding: 30px;
+        overflow-y: auto;
+    }
+    .content h1 {
+        font-size: 36px;
+        color: #333;
+    }
+    .content form {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+    .content form input, .content form textarea, .content form button {
+        font-size: 16px;
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+    .content form button {
+        background-color: #b71c1c;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    .content form button:hover {
+        background-color: #e53935;
+    }
+    .content-section {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+    <button onclick="showSection('home')">Home</button>
+    <button onclick="showSection('donor')">Donor</button>
+    <button onclick="showSection('hospital')">Hospital</button>
+    <button onclick="showSection('bloodRequest')">Blood Request</button>
+    <button onclick="showSection('approveRequest')">Approve Request</button>
+    <button onclick="showSection('message')">Message</button>
+    <button onclick="logout()">Logout</button>
+</div>
+
+<div class="content">
+    <div id="home" class="content-section">
+        <h1>Welcome to the Blood Bank Admin Dashboard</h1>
+    </div>
+    <div id="donor" class="content-section">
+        <h1>Donor Management</h1>
+        <form id="donorForm">
+            <input type="text" id="donorName" placeholder="Name" required>
+            <input type="text" id="donorBloodType" placeholder="Blood Type" required>
+            <input type="text" id="donorContact" placeholder="Contact" required>
+            <button type="submit">Add Donor</button>
+        </form>
+        <div id="donorsList"></div>
+    </div>
+    <div id="hospital" class="content-section">
+        <h1>Hospital Management</h1>
+        <form id="hospitalForm">
+            <input type="text" id="hospitalName" placeholder="Name" required>
+            <input type="text" id="hospitalLocation" placeholder="Location" required>
+            <input type="text" id="hospitalContact" placeholder="Contact" required>
+            <button type="submit">Add Hospital</button>
+        </form>
+        <div id="hospitalsList"></div>
+    </div>
+    <div id="bloodRequest" class="content-section">
+        <h1>Blood Request Management</h1>
+        <form id="bloodRequestForm">
+            <input type="text" id="requestBloodType" placeholder="Blood Type" required>
+            <input type="number" id="requestQuantity" placeholder="Quantity" required>
+            <input type="text" id="requestRequester" placeholder="Requester" required>
+            <button type="submit">Add Request</button>
+        </form>
+        <div id="requestsList"></div>
+    </div>
+    <div id="approveRequest" class="content-section">
+        <h1>Approve Blood Requests</h1>
+        <div id="approveRequestsList"></div>
+    </div>
+    <div id="message" class="content-section">
+        <h1>Message Management</h1>
+        <form id="messageForm">
+            <input type="text" id="messageSender" placeholder="Sender" required>
+            <textarea id="messageContent" placeholder="Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <div id="messagesList"></div>
+    </div>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        document.querySelectorAll('.content-section').forEach(section => {
+            section.style.display = 'none';
+        });
+        document.getElementById(sectionId).style.display = 'block';
+    }
+
+    document.getElementById('donorForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('donorName').value;
+        const bloodType = document.getElementById('donorBloodType').value;
+        const contact = document.getElementById('donorContact').value;
+
+        fetch('/addDonor', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, bloodType, contact }),
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            loadDonors();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+
+    document.getElementById('hospitalForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('hospitalName').value;
+        const location = document.getElementById('hospitalLocation').value;
+        const contact = document.getElementById('hospitalContact').value;
+
+        fetch('/addHospital', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, location, contact }),
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            loadHospitals();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+
+    document.getElementById('bloodRequestForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const bloodType = document.getElementById('requestBloodType').value;
+        const quantity = document.getElementById('requestQuantity').value;
+        const requester = document.getElementById('requestRequester').value;
+
+        fetch('/addRequest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ bloodType, quantity, requester }),
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            loadRequests();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+
+    document.getElementById('messageForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const sender = document.getElementById('messageSender').value;
+        const content = document.getElementById('messageContent').value;
+
+        fetch('/sendMessage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ sender, content }),
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            loadMessages();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    });
+
+    function loadDonors() {
+        fetch('/getDonors')
+        .then(response => response.json())
+        .then(data => {
+            const donorsList = document.getElementById('donorsList');
+            donorsList.innerHTML = '<h3>Donor List</h3>';
+            data.forEach(donor => {
+                donorsList.innerHTML += <p>${donor.name} (${donor.bloodType}) - ${donor.contact}</p>;
+            });
+        });
+    }
+
+    function loadHospitals() {
+        fetch('/getHospitals')
+        .then(response => response.json())
+        .then(data => {
+            const hospitalsList = document.getElementById('hospitalsList');
+            hospitalsList.innerHTML = '<h3>Hospital List</h3>';
+            data.forEach(hospital => {
+                hospitalsList.innerHTML += <p>${hospital.name} - ${hospital.location} (${hospital.contact})</p>;
+            });
+        });
+    }
+
+    function loadRequests() {
+        fetch('/getRequests')
+        .then(response => response.json())
+        .then(data => {
+            const requestsList = document.getElementById('requestsList');
+            const approveRequestsList = document.getElementById('approveRequestsList');
+            requestsList.innerHTML = '<h3>Blood Request List</h3>';
+            approveRequestsList.innerHTML = '<h3>Approve Blood Requests</h3>';
+            data.forEach(request => {
+                const requestItem = <p>${request.bloodType} - ${request.quantity} units requested by ${request.requester} - Status: ${request.status}</p>;
+                requestsList.innerHTML += requestItem;
+                if (request.status === 'Pending') {
+                    approveRequestsList.innerHTML += `<p>${request.bloodType} - ${request.quantity} units requested by ${request.requester} 
+                    <button onclick="approveRequest('${request._id}')">Approve</button></p>`;
+                }
+            });
+        });
+    }
+
+    function loadMessages() {
+        fetch('/getMessages')
+        .then(response => response.json())
+        .then(data => {
+            const messagesList = document.getElementById('messagesList');
+            messagesList.innerHTML = '<h3>Messages</h3>';
+            data.forEach(message => {
+                messagesList.innerHTML += <p>${message.sender} (${new Date(message.timestamp).toLocaleString()}): ${message.content}</p>;
+            });
+        });
+    }
+
+    function approveRequest(id) {
+        fetch('/approveRequest', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id }),
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            loadRequests();
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
+
+    function logout() {
+        // Implement logout functionality here
+        alert('Logged out');
+    }
+
+    window.onload = function() {
+        showSection('home');
+        loadDonors();
+        loadHospitals();
+        loadRequests();
+        loadMessages();
+    };
+</script>
+
+</body>
+</html>
